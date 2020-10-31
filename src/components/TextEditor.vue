@@ -37,10 +37,7 @@
       <div class="divider"></div>
       <div class="row">
         <div class="input-field col s6">
-          <textarea
-            v-model="currentTextElement.text"
-            class="materialize-textarea text-editor__place"
-          ></textarea>
+          <textarea v-model="currentTextElement.text" class="materialize-textarea text-editor__place"></textarea>
         </div>
         <div class="col s6">
           <div class="text-editor__showed">
@@ -62,23 +59,33 @@
             >
               Console Log
             </button>
+            <button
+              class="waves-effect waves-light btn light-green darken-1"
+              type="button"
+              aria-label="Save"
+              title="Save"
+              @click="saveData"
+            >
+              Save
+            </button>
+            <button
+              class="waves-effect waves-light btn orange"
+              type="button"
+              aria-label="Upload"
+              title="Upload"
+              @click="uploadData"
+            >
+              Upload
+            </button>
           </div>
           <div class="text-editor__control">
             <div class="input-field">
               <span class="flow-text">Balckgroun color - </span>
-              <input
-                v-model="currentTextElement.textBackground"
-                type="color"
-                name="color"
-              />
+              <input v-model="currentTextElement.textBackground" type="color" name="color" />
             </div>
             <div class="input-field">
               <span class="flow-text">Text color - </span>
-              <input
-                v-model="currentTextElement.color"
-                type="color"
-                name="color"
-              />
+              <input v-model="currentTextElement.color" type="color" name="color" />
             </div>
             <div class="input-field">
               <select ref="select" v-model="currentTextElement.textSize">
@@ -93,7 +100,7 @@
     <div class="col s12">
       <transition name="slide">
         <pre v-if="isShowJson">
-        {{ currentTextElement }}
+        {{ toJson }}
       </pre
         >
       </transition>
@@ -110,8 +117,7 @@
       textElements: [
         {
           id: 0,
-          textStyles:
-            'padding-left:3px; padding-right: 3px; border-radius: 4px;',
+          textStyles: 'padding-left:3px; padding-right: 3px; border-radius: 4px;',
           text: 'Hi',
           color: '#ffffff',
           textBackground: '#f8bbd0',
@@ -119,8 +125,7 @@
         },
         {
           id: 1,
-          textStyles:
-            'padding-left:3px; padding-right: 3px; border-radius: 4px',
+          textStyles: 'padding-left:3px; padding-right: 3px; border-radius: 4px',
           text: 'My lovely',
           color: '#ffffff',
           textBackground: '#f8bbd0',
@@ -128,8 +133,7 @@
         },
         {
           id: 2,
-          textStyles:
-            'padding-left:3px; padding-right: 3px; border-radius: 4px',
+          textStyles: 'padding-left:3px; padding-right: 3px; border-radius: 4px',
           text: 'little',
           color: '#880e4f',
           textBackground: '#fff',
@@ -137,8 +141,7 @@
         },
         {
           id: 3,
-          textStyles:
-            'padding-left:3px; padding-right: 3px; border-radius: 4px',
+          textStyles: 'padding-left:3px; padding-right: 3px; border-radius: 4px',
           text: 'Ponny',
           color: '#ba68c8',
           textBackground: '#f8bb00',
@@ -164,6 +167,11 @@
         for (let i = 8; i <= 72; i += 1) sizes.push(i)
         return sizes
       },
+      toJson() {
+        return this.textElements.map(el => {
+          return { text: el.text, fontSize: el.textSize, color: el.color }
+        })
+      },
     },
     mounted() {
       // eslint-disable-next-line no-undef
@@ -181,7 +189,16 @@
         this.select = M.FormSelect.init(this.$refs.select)
       },
       consoleLogJson() {
-        console.log(JSON.stringify(this.currentTextElement, null, 1))
+        console.log(JSON.stringify(this.toJson, null, 1))
+      },
+      saveData() {
+        localStorage.setItem('data', JSON.stringify(this.textElements))
+      },
+      uploadData() {
+        const data = JSON.parse(localStorage.getItem('data'))
+        if (data) {
+          this.textElements = data
+        }
       },
     },
   }
