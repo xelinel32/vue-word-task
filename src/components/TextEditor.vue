@@ -34,9 +34,41 @@
       </TextElement>
     </div>
     <div class="col s12">
+      <div class="divider"></div>
       <div class="row">
-        <div class="input-field col s12"></div>
+        <div class="input-field col s6">
+          <textarea
+            v-model="currentTextElement.text"
+            class="materialize-textarea text-editor__place"
+          ></textarea>
+        </div>
+        <div class="col s6">
+          <div class="text-editor__showed">
+            <button
+              class="waves-effect waves-light btn"
+              type="button"
+              @click="isShowJson = !isShowJson"
+            >
+              JSON log
+            </button>
+            <button
+              class="waves-effect waves-light btn"
+              type="button"
+              @click="consoleLogJson"
+            >
+              Console Log
+            </button>
+          </div>
+        </div>
       </div>
+    </div>
+    <div class="col s12">
+      <transition name="slide">
+        <pre v-if="isShowJson">
+        {{ currentTextElement }}
+      </pre
+        >
+      </transition>
     </div>
   </div>
 </template>
@@ -103,6 +135,9 @@
       seteSelectElem(id) {
         this.currentElementId = id
       },
+      consoleLogJson() {
+        console.log(JSON.stringify(this.currentTextElement, null, 1))
+      },
     },
   }
 </script>
@@ -114,5 +149,33 @@
       align-items: center;
       justify-content: center;
     }
+    &__place {
+      height: 200px !important;
+    }
+    &__showed {
+      button:not(:last-child) {
+        margin-right: 1rem;
+      }
+    }
+    .divider {
+      margin: 2rem 0;
+    }
+    pre {
+      white-space: pre-line;
+      border: 1px solid #000;
+      padding: 5px;
+      border-radius: 3px;
+    }
+  }
+  .slide-enter-active {
+    transition: all 0.3s ease;
+  }
+  .slide-leave-active {
+    transition: all 0.8s ease;
+  }
+  .slide-enter,
+  .slide-leave-to {
+    transform: translateY(-30%);
+    opacity: 0;
   }
 </style>
