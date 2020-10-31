@@ -47,6 +47,8 @@
             <button
               class="waves-effect waves-light btn"
               type="button"
+              aria-label="logJsonBlock"
+              title="JSON log"
               @click="isShowJson = !isShowJson"
             >
               JSON log
@@ -54,10 +56,36 @@
             <button
               class="waves-effect waves-light btn"
               type="button"
+              aria-label="logJson"
+              title="Console Log"
               @click="consoleLogJson"
             >
               Console Log
             </button>
+          </div>
+          <div class="text-editor__control">
+            <div class="input-field">
+              <span class="flow-text">Balckgroun color - </span>
+              <input
+                v-model="currentTextElement.textBackground"
+                type="color"
+                name="color"
+              />
+            </div>
+            <div class="input-field">
+              <span class="flow-text">Text color - </span>
+              <input
+                v-model="currentTextElement.color"
+                type="color"
+                name="color"
+              />
+            </div>
+            <div class="input-field">
+              <select ref="select" v-model="currentTextElement.textSize">
+                <option value="" disabled selected>Choose size</option>
+                <option v-for="s in sizes" :key="s" :value="s">{{ s }}</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>
@@ -119,6 +147,7 @@
       ],
       currentElementId: 0,
       isShowJson: false,
+      select: null,
     }),
     computed: {
       withoutFirst() {
@@ -130,10 +159,26 @@
       currentTextElement() {
         return this.textElements.find(el => el.id === this.currentElementId)
       },
+      sizes() {
+        const sizes = []
+        for (let i = 8; i <= 72; i += 1) sizes.push(i)
+        return sizes
+      },
+    },
+    mounted() {
+      // eslint-disable-next-line no-undef
+      this.select = M.FormSelect.init(this.$refs.select)
+    },
+    destroyed() {
+      if (this.select && this.select.destroy) {
+        this.select.destroy()
+      }
     },
     methods: {
       seteSelectElem(id) {
         this.currentElementId = id
+        // eslint-disable-next-line no-undef
+        this.select = M.FormSelect.init(this.$refs.select)
       },
       consoleLogJson() {
         console.log(JSON.stringify(this.currentTextElement, null, 1))
@@ -165,17 +210,19 @@
       border: 1px solid #000;
       padding: 5px;
       border-radius: 3px;
+      pointer-events: none;
+      user-select: none;
     }
-  }
-  .slide-enter-active {
-    transition: all 0.3s ease;
-  }
-  .slide-leave-active {
-    transition: all 0.8s ease;
-  }
-  .slide-enter,
-  .slide-leave-to {
-    transform: translateY(-30%);
-    opacity: 0;
+    .slide-enter-active {
+      transition: all 0.3s ease;
+    }
+    .slide-leave-active {
+      transition: all 0.8s ease;
+    }
+    .slide-enter,
+    .slide-leave-to {
+      transform: translateY(-30%);
+      opacity: 0;
+    }
   }
 </style>

@@ -15,6 +15,5 @@
 </script>
 
 <style lang="scss">
-  @import '~materialize-css/sass/materialize.scss';
   @import 'assets/styles.scss';
 </style>
